@@ -13,23 +13,42 @@ using System.Text;
 using System.IO;
 using System.Windows.Input;
 using System.Text.Json;
+using System.Windows.Media;
+using System.ComponentModel;
 
 namespace SkillProfiAdmin
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         private List<Request> requests = new List<Request>();
         private static readonly HttpClient client = new HttpClient { BaseAddress = new Uri("https://localhost:7060/") };
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private bool _isLoading;
+
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                if (_isLoading != value)
+                {
+                    _isLoading = value;
+                    OnPropertyChanged(nameof(IsLoading));
+                }
+            }
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public MainWindow()
         {
             InitializeComponent();
-            // Инициализация может быть отложена до выбора вкладки
-            // Если хотите загружать данные сразу при запуске, раскомментируйте следующие строки:
-            // LoadRequests();
-            // LoadServices();
-            // LoadProjects();
-            // LoadBlogPosts();
+            DataContext = this; // Устанавливаем контекст данных
         }
 
         /// <summary>
@@ -38,7 +57,7 @@ namespace SkillProfiAdmin
         /// <param name="action">Асинхронное действие, которое необходимо выполнить.</param>
         private async Task ExecuteWithLoadingIndicator(Func<Task> action)
         {
-            LoadingText.Visibility = Visibility.Visible;
+            IsLoading = true;
             try
             {
                 await action();
@@ -50,7 +69,7 @@ namespace SkillProfiAdmin
             }
             finally
             {
-                LoadingText.Visibility = Visibility.Collapsed;
+                IsLoading = false;
             }
         }
 
@@ -658,6 +677,40 @@ namespace SkillProfiAdmin
                 previewWindow.ShowDialog();
             }
         }
+        private void NavigateToTab_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string tabName)
+            {
+                foreach (TabItem tab in MainTabControl.Items)
+                {
+                    if (tab.Header.ToString() == tabName)
+                    {
+                        MainTabControl.SelectedItem = tab;
+                        break;
+                    }
+                }
+            }
+        }
+        private void RemovePlaceholder(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox.Text == "Поиск...")
+            {
+                textBox.Text = "";
+                textBox.Foreground = new SolidColorBrush(Colors.Black);
+            }
+        }
+
+        private void AddPlaceholder(object sender, RoutedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (string.IsNullOrWhiteSpace(textBox.Text))
+            {
+                textBox.Text = "Поиск...";
+                textBox.Foreground = new SolidColorBrush(Colors.Gray);
+            }
+        }
+
 
         /// <summary>
         /// Метод загрузки заявок.
