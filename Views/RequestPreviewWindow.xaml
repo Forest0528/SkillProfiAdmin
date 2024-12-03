@@ -3,6 +3,58 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Предварительный просмотр заявки" Height="400" Width="600"
         Background="#F3F4F6" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Window.Resources>
+        <!-- Стиль для заголовков полей -->
+        <Style TargetType="TextBlock" x:Key="FieldTitleStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+
+        <!-- Стиль для значений полей -->
+        <Style TargetType="TextBlock" x:Key="FieldValueStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#555"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <!-- Общий стиль для кнопок -->
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#388E3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#45A049"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#388E3C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,38 +66,38 @@
         </Grid.RowDefinitions>
 
         <!-- ID заявки -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock Text="ID заявки:" Width="150" VerticalAlignment="Center" FontWeight="Bold"/>
-            <TextBlock Text="{Binding Id}" Width="400" VerticalAlignment="Center"/>
-        </StackPanel>
+        <UniformGrid Rows="1" Columns="2" Grid.Row="0" Margin="0,0,0,10">
+            <TextBlock Text="ID заявки:" Style="{StaticResource FieldTitleStyle}" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Id}" Style="{StaticResource FieldValueStyle}" VerticalAlignment="Center"/>
+        </UniformGrid>
 
         <!-- Имя -->
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10">
-            <TextBlock Text="Имя:" Width="150" VerticalAlignment="Center" FontWeight="Bold"/>
-            <TextBlock Text="{Binding FirstName}" Width="400" VerticalAlignment="Center"/>
-        </StackPanel>
+        <UniformGrid Rows="1" Columns="2" Grid.Row="1" Margin="0,0,0,10">
+            <TextBlock Text="Имя:" Style="{StaticResource FieldTitleStyle}" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding FirstName}" Style="{StaticResource FieldValueStyle}" VerticalAlignment="Center"/>
+        </UniformGrid>
 
         <!-- Фамилия -->
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,10">
-            <TextBlock Text="Фамилия:" Width="150" VerticalAlignment="Center" FontWeight="Bold"/>
-            <TextBlock Text="{Binding LastName}" Width="400" VerticalAlignment="Center"/>
-        </StackPanel>
+        <UniformGrid Rows="1" Columns="2" Grid.Row="2" Margin="0,0,0,10">
+            <TextBlock Text="Фамилия:" Style="{StaticResource FieldTitleStyle}" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding LastName}" Style="{StaticResource FieldValueStyle}" VerticalAlignment="Center"/>
+        </UniformGrid>
 
         <!-- Email -->
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="0,0,0,10">
-            <TextBlock Text="Email:" Width="150" VerticalAlignment="Center" FontWeight="Bold"/>
-            <TextBlock Text="{Binding Email}" Width="400" VerticalAlignment="Center"/>
-        </StackPanel>
+        <UniformGrid Rows="1" Columns="2" Grid.Row="3" Margin="0,0,0,10">
+            <TextBlock Text="Email:" Style="{StaticResource FieldTitleStyle}" VerticalAlignment="Center"/>
+            <TextBlock Text="{Binding Email}" Style="{StaticResource FieldValueStyle}" VerticalAlignment="Center"/>
+        </UniformGrid>
 
         <!-- Сообщение -->
-        <StackPanel Orientation="Horizontal" Grid.Row="4" Margin="0,0,0,10">
-            <TextBlock Text="Сообщение:" Width="150" VerticalAlignment="Top" FontWeight="Bold"/>
-            <TextBlock Text="{Binding Message}" Width="400" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        </StackPanel>
+        <UniformGrid Rows="1" Columns="2" Grid.Row="4" Margin="0,0,0,10">
+            <TextBlock Text="Сообщение:" Style="{StaticResource FieldTitleStyle}" VerticalAlignment="Top"/>
+            <TextBlock Text="{Binding Message}" Style="{StaticResource FieldValueStyle}" VerticalAlignment="Top"/>
+        </UniformGrid>
 
         <!-- Кнопка закрытия -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="5">
-            <Button Content="Закрыть" Width="100" Click="CloseButton_Click"/>
+            <Button Content="Закрыть" Click="CloseButton_Click" ToolTip="Закрыть окно"/>
         </StackPanel>
     </Grid>
 </Window>

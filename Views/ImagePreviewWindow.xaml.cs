@@ -11,5 +11,10 @@ namespace SkillProfiAdmin.Views
             InitializeComponent();
             PreviewImage.Source = new BitmapImage(new Uri(imageUrl));
         }
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
     }
 }
