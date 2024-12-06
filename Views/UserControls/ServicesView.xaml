@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="SkillProfiAdmin.Views.UserControls.ServicesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="White">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Text="Управление услугами" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
+
+        <!-- Таблица услуг -->
+        <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False"
+                  SelectionMode="Single" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
+                <!-- Добавьте другие столбцы по необходимости -->
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Панель управления услугами -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="2">
+            <Button x:Name="AddServiceButton" Content="Добавить Услугу" Click="AddServiceButton_Click" ToolTip="Добавить новую услугу"/>
+            <Button x:Name="EditServiceButton" Content="Редактировать Услугу" Click="EditServiceButton_Click" ToolTip="Редактировать выбранную услугу"/>
+            <Button x:Name="DeleteServiceButton" Content="Удалить Услугу" Click="DeleteServiceButton_Click" ToolTip="Удалить выбранную услугу"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

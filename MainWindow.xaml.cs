@@ -49,6 +49,38 @@ namespace SkillProfiAdmin
         {
             InitializeComponent();
             DataContext = this; // Устанавливаем контекст данных
+            LoadContent("Desktop");
+        }
+        private void NavigateToTab_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string tag)
+            {
+                LoadContent(tag);
+            }
+        }
+        private void LoadContent(string tag)
+        {
+            switch (tag)
+            {
+                case "Desktop":
+                    MainContent.Content = new DesktopView();
+                    break;
+                case "Requests":
+                    MainContent.Content = new RequestsView();
+                    break;
+                case "Services":
+                    MainContent.Content = new ServicesView();
+                    break;
+                case "Projects":
+                    MainContent.Content = new ProjectsView();
+                    break;
+                case "Blog":
+                    MainContent.Content = new BlogView();
+                    break;
+                default:
+                    MainContent.Content = null;
+                    break;
+            }
         }
 
         /// <summary>
@@ -626,41 +658,6 @@ namespace SkillProfiAdmin
             else
             {
                 MessageBox.Show("Изображение для этого проекта отсутствует.");
-            }
-        }
-
-        /// <summary>
-        /// Обработчик изменения выбранной вкладки в TabControl.
-        /// </summary>
-        private async void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Проверяем источник события
-            if (e.Source is TabControl tabControl)
-            {
-                if (tabControl.SelectedItem is TabItem selectedTab)
-                {
-                    // Выводим заголовок выбранной вкладки (например, для отладки)
-                    Console.WriteLine($"Выбрана вкладка: {selectedTab.Header}");
-
-                    // Логика загрузки данных для выбранной вкладки
-                    switch (selectedTab.Header.ToString())
-                    {
-                        case "Заявки":
-                            await LoadRequests();
-                            break;
-                        case "Услуги":
-                            await LoadServices();
-                            break;
-                        case "Проекты":
-                            await LoadProjects();
-                            break;
-                        case "Блог":
-                            await LoadBlogPosts();
-                            break;
-                        default:
-                            break;
-                    }
-                }
             }
         }
 

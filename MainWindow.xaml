@@ -1,6 +1,7 @@
 ﻿<Window x:Class="SkillProfiAdmin.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:SkillProfiAdmin.Views.UserControls"
         Title="SkillProfi Admin" Height="700" Width="1200"
         Background="#F3F4F6" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Window.Resources>
@@ -65,12 +66,6 @@
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
 
-        <!-- Пример анимации -->
-        <Storyboard x:Key="ButtonHoverAnimation">
-            <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                            To="#45A049" Duration="0:0:0.2"/>
-        </Storyboard>
-
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
 
@@ -83,173 +78,16 @@
         <!-- Боковая панель навигации -->
         <StackPanel Background="{StaticResource PrimaryBrush}" Grid.Column="0" VerticalAlignment="Stretch">
             <TextBlock Text="Hello Admin!" Foreground="White" FontSize="30" FontWeight="Bold" Margin="10" HorizontalAlignment="Center"/>
-            <Button Content="Рабочий стол" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Рабочий стол"/>
-            <Button Content="Заявки" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Заявки"/>
-            <Button Content="Услуги" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Услуги"/>
-            <Button Content="Проекты" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Проекты"/>
-            <Button Content="Блог" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Блог"/>
+            <Button Content="Рабочий стол" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Desktop"/>
+            <Button Content="Заявки" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Requests"/>
+            <Button Content="Услуги" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Services"/>
+            <Button Content="Проекты" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Projects"/>
+            <Button Content="Блог" Style="{StaticResource NavButtonStyle}" Click="NavigateToTab_Click" Tag="Blog"/>
         </StackPanel>
 
         <!-- Основное содержимое -->
         <Grid Grid.Column="1" Margin="10">
-            <TabControl x:Name="MainTabControl" SelectionChanged="TabControl_SelectionChanged">
-                <!-- Вкладка для управления заявками -->
-                <TabItem Header="Заявки">
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Фильтр по статусу и поиску -->
-                        <StackPanel Orientation="Horizontal" Margin="10" Grid.Row="0" VerticalAlignment="Center">
-                            <TextBlock Text="Поиск:" VerticalAlignment="Center"/>
-                            <TextBox x:Name="SearchTextBox" Width="200" TextChanged="SearchTextBox_TextChanged" 
-                                     ToolTip="Поиск..." />
-                            <TextBlock Text="Фильтр по статусу:" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                            <ComboBox x:Name="FilterStatusComboBox" Width="150" SelectionChanged="FilterStatusComboBox_SelectionChanged">
-                                <ComboBoxItem Content="Все" />
-                                <ComboBoxItem Content="Received" />
-                                <ComboBoxItem Content="InProgress" />
-                                <ComboBoxItem Content="Completed" />
-                                <ComboBoxItem Content="Rejected" />
-                                <ComboBoxItem Content="Cancelled" />
-                            </ComboBox>
-                        </StackPanel>
-
-                        <!-- Таблица для отображения заявок -->
-                        <DataGrid x:Name="RequestsDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False"
-                                  SelectionChanged="RequestsDataGrid_SelectionChanged" 
-                                  IsReadOnly="True"
-                                  MouseDoubleClick="RequestsDataGrid_MouseDoubleClick">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Номер заявки" Binding="{Binding Id}" Width="Auto"/>
-                                <DataGridTextColumn Header="Время заявки" Binding="{Binding CreatedDate}" Width="*"/>
-                                <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="*"/>
-                                <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="*"/>
-                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
-                                <DataGridTextColumn Header="Текст обращения" Binding="{Binding Message}" Width="*"/>
-                                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="*"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <!-- Панель управления заявкой -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="2" VerticalAlignment="Center">
-                            <TextBlock Text="Изменить статус:" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="StatusComboBox" Width="150" Margin="5">
-                                <ComboBoxItem Content="Received" />
-                                <ComboBoxItem Content="InProgress" />
-                                <ComboBoxItem Content="Completed" />
-                                <ComboBoxItem Content="Rejected" />
-                                <ComboBoxItem Content="Cancelled" />
-                            </ComboBox>
-                            <Button x:Name="UpdateStatusButton" Content="Сохранить изменения" Click="UpdateStatusButton_Click"/>
-                            <Button x:Name="RefreshButton" Content="Обновить" Click="RefreshButton_Click"/>
-                            <Button x:Name="ExportRequestsToCsvButton" Content="Экспорт в CSV" Click="ExportRequestsToCsv_Click"/>
-                        </StackPanel>
-                    </Grid>
-                </TabItem>
-
-                <!-- Вкладка для управления услугами -->
-                <TabItem Header="Услуги">
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Заголовок -->
-                        <TextBlock Text="Управление услугами" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
-
-                        <!-- Таблица услуг -->
-                        <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False"
-                                  SelectionMode="Single" IsReadOnly="True">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
-                                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
-                                <!-- Добавьте другие столбцы по необходимости -->
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <!-- Панель управления услугами -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="2">
-                            <Button x:Name="AddServiceButton" Content="Добавить Услугу" Click="AddServiceButton_Click"/>
-                            <Button x:Name="EditServiceButton" Content="Редактировать Услугу" Click="EditServiceButton_Click"/>
-                            <Button x:Name="DeleteServiceButton" Content="Удалить Услугу" Click="DeleteServiceButton_Click"/>
-                        </StackPanel>
-                    </Grid>
-                </TabItem>
-
-                <!-- Вкладка для управления проектами -->
-                <TabItem Header="Проекты">
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Заголовок -->
-                        <TextBlock Text="Управление проектами" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
-
-                        <!-- Таблица проектов -->
-                        <DataGrid x:Name="ProjectsDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False" 
-                                  SelectionMode="Single" IsReadOnly="True" 
-                                  MouseDoubleClick="ProjectsDataGrid_MouseDoubleClick">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
-                                <DataGridTextColumn Header="Описание" Binding="{Binding Description}" Width="*"/>
-                                <DataGridTextColumn Header="Изображение" Binding="{Binding ImageUrl}" Width="*"/>
-                                <!-- Добавьте другие столбцы по необходимости -->
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <!-- Панель управления проектами -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="2">
-                            <Button x:Name="AddProjectButton" Content="Добавить Проект" Click="AddProjectButton_Click"/>
-                            <Button x:Name="EditProjectButton" Content="Редактировать Проект" Click="EditProjectButton_Click"/>
-                            <Button x:Name="DeleteProjectButton" Content="Удалить Проект" Click="DeleteProjectButton_Click"/>
-                        </StackPanel>
-                    </Grid>
-                </TabItem>
-
-                <!-- Вкладка для управления блогом -->
-                <TabItem Header="Блог">
-                    <Grid Margin="10">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Заголовок -->
-                        <TextBlock Text="Управление блогом" FontSize="20" FontWeight="Bold" Margin="10" Grid.Row="0"/>
-
-                        <!-- Таблица статей блога -->
-                        <DataGrid x:Name="BlogPostsDataGrid" Grid.Row="1" Margin="10" AutoGenerateColumns="False"
-                                  SelectionMode="Single" IsReadOnly="True">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="Auto"/>
-                                <DataGridTextColumn Header="Заголовок" Binding="{Binding Title}" Width="*"/>
-                                <DataGridTextColumn Header="Содержание" Binding="{Binding Content}" Width="*"/>
-                                <DataGridTextColumn Header="Дата публикации" Binding="{Binding PublishedDate}" Width="*"/>
-                                <!-- Добавьте другие столбцы по необходимости -->
-                            </DataGrid.Columns>
-                        </DataGrid>
-
-                        <!-- Панель управления статьями блога -->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="2">
-                            <Button x:Name="AddBlogPostButton" Content="Добавить Статью" Click="AddBlogPostButton_Click"/>
-                            <Button x:Name="EditBlogPostButton" Content="Редактировать Статью" Click="EditBlogPostButton_Click"/>
-                            <Button x:Name="DeleteBlogPostButton" Content="Удалить Статью" Click="DeleteBlogPostButton_Click"/>
-                        </StackPanel>
-                    </Grid>
-                </TabItem>
-            </TabControl>
+            <ContentControl x:Name="MainContent"/>
         </Grid>
 
         <!-- Индикатор загрузки, расположенный поверх всего содержимого -->
@@ -258,11 +96,11 @@
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                     <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
                     <TextBlock Text="Загрузка..." 
-                       Foreground="#FF5722" 
-                       FontWeight="Bold" 
-                       FontSize="16"
-                       HorizontalAlignment="Center" 
-                       VerticalAlignment="Center"/>
+                               Foreground="#FF5722" 
+                               FontWeight="Bold" 
+                               FontSize="16"
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
         </Grid>
